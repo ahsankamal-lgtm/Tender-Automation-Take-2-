@@ -3,4 +3,4 @@ python-docx
 pdfplumber==0.11.4
 pandas
 openpyxl
-openai
+openai==0.28.1
