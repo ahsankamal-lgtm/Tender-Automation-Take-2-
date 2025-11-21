@@ -91,12 +91,15 @@ st.write("Central knowledge base for automated tender and RFP responses.")
 # ---------- PATHS ----------
 BASE_DIR = Path(__file__).parent
 
+# Root folder that contains all the library categories
+LIBRARY_ROOT = BASE_DIR / "Tender_Aligned_FinalLibrary"
+
 # Map of categories to their folder names in the repo
 CATEGORY_FOLDERS = {
-    "Corporate Profile": BASE_DIR / "Corporate Profile",
-    "Technical Profile": BASE_DIR / "Technical Profile",
-    "Security Profile": BASE_DIR / "Security Profile",
-    "Services And Delivery": BASE_DIR / "Services And Delivery",
+    "Corporate Profile": LIBRARY_ROOT / "Corporate Profile",
+    "Technical Profile": LIBRARY_ROOT / "Technical Profile",
+    "Security Profile": LIBRARY_ROOT / "Security Profile",
+    "Services And Delivery": LIBRARY_ROOT / "Services And Delivery",
 }
 
 # ---------- HELPER: READ WORD DOCUMENT ----------
