@@ -12,18 +12,13 @@ except ImportError:
     pdfplumber = None
     PDF_SUPPORT = False
 
-# Try to import openai, but don't crash if it's not installed
+# Try to import OpenAI client, but don't crash if it's not installed
 try:
-    import openai
+    from openai import OpenAI
     OPENAI_AVAILABLE = True
 except ImportError:
-    openai = None
+    OpenAI = None
     OPENAI_AVAILABLE = False
-
-import sys
-st.sidebar.write("Python version:", sys.version)
-st.sidebar.write("PDF_SUPPORT flag:", PDF_SUPPORT)
-st.sidebar.write("Installed libs file source: requirements.txt at repo root")
 
 # ---------- BASIC PAGE SETTINGS (MUST BE FIRST STREAMLIT CALL) ----------
 st.set_page_config(
@@ -194,10 +189,10 @@ def get_openai_api_key():
 
 def generate_openai_response(prompt_text: str):
     """
-    Call OpenAI ChatCompletion and return the response text.
-    Uses openai.ChatCompletion.create so it works with older SDKs.
+    Call OpenAI Chat Completions API (new SDK) and return the response text.
+    Uses `OpenAI` client and `client.chat.completions.create`.
     """
-    if not OPENAI_AVAILABLE or openai is None:
+    if not OPENAI_AVAILABLE or OpenAI is None:
         st.error("❌ OpenAI Python client is not installed. Check requirements.txt for 'openai'.")
         return None
 
@@ -205,15 +200,14 @@ def generate_openai_response(prompt_text: str):
     if api_key is None:
         return None
 
-    openai.api_key = api_key
-
     try:
-        response = openai.ChatCompletion.create(
+        client = OpenAI(api_key=api_key)
+        response = client.chat.completions.create(
             model="gpt-4.1-mini",   # adjust if you want another model
             messages=[{"role": "user", "content": prompt_text}],
             temperature=0.2,
         )
-        return response["choices"][0]["message"]["content"]
+        return response.choices[0].message.content
     except Exception as e:
         st.error(f"❌ OpenAI API call failed: {e}")
         return None
@@ -465,6 +459,7 @@ elif page == "📝 Generate Responses":
         selected_clause = tender_clauses[selected_index]
 
         st.markdown("### 📌 Selected Clause")
+        
         st.markdown(f"**Clause {selected_clause['clause_no']}**")
         st.write(selected_clause["clause_text"])
 
@@ -571,3 +566,5 @@ elif page == "📖 View Documents":
 
         content = load_docx_text(selected_doc_path)
         st.markdown(content)
+
+::contentReference[oaicite:0]{index=0}
